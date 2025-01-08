@@ -13,16 +13,27 @@ $capital = $request->input('capital');
   $periodo = $request->input('periodo');
    $juros = $taxa / 100;
     
+   
+    $mes = 1;
    $dados = array();
 
-for($i= 1; $i <= $periodo; $i++){
-     $dados[$i]['mes'] = $i; 
-     $dados[$i]['capitalInicial'] = number_format($capital, 2,',' , '.');
-     $dados[$i]['capitalAtualizado'] = number_format($capital + ($capital * $juros), 2, ',' , '.');
+for($p= $periodo; $p >= 1; $p--){
+   
+    $capital=($capital+($capital * $juros));
+    $parcela =($capital/$p);
+    
+    $dados[$i]['mes'] = $mes; 
+    $dados[$i]['totalAPagar'] = number_format($capital, 2,',' , '.');
+    $dados[$i]['parcela'] = number_format($parcela , 2, ',' , '.');
 
-     
-     $capital = $capital + ($capital * $juros); 
+$capital = ($capital - $parcela);
+    $mes=$mes+1;
+     $totalPago=$totalPago+$parcela;
 }
+
+ $dados[$i]['totalPago'] = number_format($totalPago , 2, ',' , '.');
+
+
 return view('resposta', compact('dados'));
 
 }
